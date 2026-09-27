@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Daragh Haughton — Space Systems &amp; Onboard AI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #10161C;
+    --surface: #16202A;
+    --band: #1B2731;
+    --ink: #EDF0EC;
+    --ink-soft: #90A0A8;
+    --accent: #E8703A;
+    --accent-soft: #33241A;
+    --line: #2A3640;
+    --blueprint: #6E9BC0;
+    --font-display: 'IBM Plex Sans', -apple-system, sans-serif;
+    --font-body: 'IBM Plex Sans', -apple-system, sans-serif;
+    --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
+    --measure: 62ch;
+  }
+
+  *{ box-sizing: border-box; }
+  html{ scroll-behavior: smooth; }
+  @media (prefers-reduced-motion: reduce){
+    html{ scroll-behavior: auto; }
+    *{ animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
+  }
+
+  body{
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--font-body);
+    font-size: 17px;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  a{ color: var(--blueprint); text-decoration-color: var(--line); text-underline-offset: 3px; }
+  a:hover{ text-decoration-color: currentColor; }
+  :focus-visible{ outline: 2px solid var(--accent); outline-offset: 3px; }
+
+  h1, h2, h3{
+    font-family: var(--font-display);
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    margin: 0;
+  }
+
+  .wrap{ max-width: 920px; margin: 0 auto; padding: 0 28px; }
+
+  /* ---------- Nav ---------- */
+  header.site{
+  position: sticky; top: 0; z-index: 20;
+  background: rgba(16,22,28,0.92);
+  backdrop-filter: blur(6px);
+  border-bottom: 1px solid var(--line);
+}
+  .nav{
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 16px 28px; max-width: 920px; margin: 0 auto;
+  }
+  .nav .name{ font-family: var(--font-display); font-weight: 600; font-size: 16px; }
+  .nav .name span{
+    display: block; font-family: var(--font-mono); font-weight: 400;
+    font-size: 12px; color: var(--ink-soft); margin-top: 2px;
+  }
+  .nav ul{ list-style: none; display: flex; gap: 24px; margin: 0; padding: 0; font-size: 14.5px; }
+  .nav ul a{ color: var(--ink); text-decoration: none; }
+  .nav ul a:hover{ color: var(--accent); }
+  .nav-toggle{
+    display: none; background: none; border: 1px solid var(--line); border-radius: 4px;
+    padding: 6px 10px; font-family: var(--font-mono); font-size: 13px; color: var(--ink); cursor: pointer;
+  }
+  @media (max-width: 640px){
+    .nav ul{
+      display: none; position: absolute; top: 100%; left: 0; right: 0;
+      flex-direction: column; background: var(--surface); border-bottom: 1px solid var(--line);
+      padding: 16px 28px; gap: 14px;
+    }
+    .nav ul.open{ display: flex; }
+    .nav-toggle{ display: block; }
+  }
+
+  /* ---------- Hero ---------- */
+  .hero{ padding: 56px 0 40px; }
+  .hero h1{ font-size: clamp(28px, 4.4vw, 42px); line-height: 1.15; max-width: 36ch; }
+  .hero p.lede{ max-width: var(--measure); color: var(--ink-soft); font-size: 18px; margin: 18px 0 0; }
+
+  .hero-photo{
+    margin-top: 36px;
+    border: 1px dashed var(--line);
+    background: var(--surface);
+    aspect-ratio: 16 / 9;
+    display: flex; align-items: center; justify-content: center;
+    text-align: center; color: var(--ink-soft); font-size: 14px; padding: 24px;
+  }
+
+  img.hero-photo{
+  border: none;
+  width: 100%;
+  max-width: 640px;
+  height: auto;
+  aspect-ratio: auto;
+  object-fit: cover;
+  display: block;
+  margin: 0 auto;
+  }
+
+  .hero-photo-caption{
+  max-width: 420px;
+  margin: 8px auto 0;
+  padding-top: 8px;
+  border-top: 1px solid var(--line);
+  font-family: var(--font-mono); font-size: 12px; color: var(--ink-soft);
+  display: flex; flex-direction: column; gap: 4px;
+}
+
+.case-img{
+  display: block;
+  width: 80%;
+  height: auto;
+  margin: 6px auto 0;
+  border: 1px solid var(--line);
+}
+
+.case-img-caption{
+  max-width: 500px;
+  margin: 4px auto 0;
+  padding-top: 4px;
+  border-top: 1px solid var(--line);
+  font-family: var(--font-mono); font-size: 12px; color: var(--ink-soft);
+  display: flex; flex-direction: column; gap: 2px;
+}
+
+.medal-badge{
+  display: inline-flex;
+  align-items: baseline;
+  gap: 10px;
+  margin-top: 14px;
+  padding: 8px 14px;
+  border: 1px solid var(--accent);
+  background: var(--accent-soft);
+}
+.medal-badge-label{
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--accent);
+}
+.medal-badge-detail{
+  font-family: var(--font-mono);
+  font-size: 14px;
+  color: var(--ink-soft);
+}
+
+.small-img{
+  display: block;
+  width: 60%;
+  height: auto;
+  margin: 6px auto 0;
+  border: 1px solid var(--line);
+}
+
+.small-img-caption{
+  max-width: 250px;
+  margin: 4px auto 0;
+  padding-top: 4px;
+  border-top: 1px solid var(--line);
+  font-family: var(--font-mono); font-size: 10px; color: var(--ink-soft);
+  display: flex; flex-direction: column; gap: 1px;
+}
+
+  .stat-row{
+    font-family: var(--font-mono); font-size: 18px; color: var(--ink-soft);
+    margin-top: 28px; padding-top: 16px; border-top: 1px solid var(--line);
+  }
+
+  /* ---------- Section shell ---------- */
+  section{ padding: 52px 0; border-top: 1px solid var(--line); }
+  section.band{ background: var(--band); }
+  .section-head{ margin-bottom: 26px; }
+  .section-head h2{ font-size: 24px; }
+  .section-head p{ color: var(--ink-soft); margin: 8px 0 0; max-width: var(--measure); }
+
+  /* ---------- Current (Ubotica) ---------- */
+  .current-block{ background: var(--surface); border: 1px solid var(--line); padding: 24px 28px; margin-top: 4px; }
+  .current-block h3{ font-size: 19px; }
+  .current-block .manifest{ margin: 16px 0 16px; }
+  .current-block p.overview{ max-width: var(--measure); }
+  .current-block p.confidential{ margin-top: 14px; color: var(--ink-soft); font-size: 14.5px; max-width: var(--measure); }
+
+  /* ---------- Case study block (reused for TupperSat / Prithvi / capstone) ---------- */
+  .case{ margin-bottom: 8px; }
+  .case + .case{ margin-top: 56px; padding-top: 48px; border-top: 1px solid var(--line); }
+  .manifest{
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 16px 24px;
+    background: var(--surface); border: 1px solid var(--line); padding: 20px 24px; margin: 20px 0 32px;
+  }
+  .manifest dt{ font-family: var(--font-mono); font-size: 11.5px; color: var(--ink-soft); text-transform: lowercase; }
+  .manifest dd{ margin: 4px 0 0; font-family: var(--font-mono); font-size: 14px; color: var(--ink); }
+
+  .case h3.case-title{ font-size: 28px; margin-bottom: 4px; }
+  .case .case-sub{ color: var(--ink-soft); font-size: 15px; margin: 0 0 4px; }
+  .case .overview{ max-width: var(--measure); margin-top: 18px; }
+
+  /* Review gates (TupperSat only — this is a real ordered sequence) */
+  .gates{ margin-top: 32px; display: grid; gap: 0; }
+  .gate{ display: grid; grid-template-columns: 64px 1fr; gap: 20px; padding: 22px 0; border-top: 1px solid var(--line); }
+  .gate:last-child{ border-bottom: 1px solid var(--line); }
+  .gate-num{ font-family: var(--font-mono); font-size: 13px; color: var(--accent); padding-top: 2px; }
+  .gate h4{ font-family: var(--font-display); font-size: 17px; margin: 0 0 4px; }
+  .gate .gate-purpose{ color: var(--ink-soft); font-size: 15px; margin: 0 0 10px; max-width: var(--measure); }
+  .gate .gate-detail{ font-size: 14.5px; margin: 4px 0; }
+  .gate .gate-detail b{ font-weight: 600; }
+  @media (max-width: 560px){ .gate{ grid-template-columns: 1fr; gap: 6px; } }
+
+  .section-label{
+  font-family: var(--font-mono);
+  font-size: 16px;
+  color: var(--ink-soft);
+  margin-top: 32px;
+  text-transform: uppercase;
+}
+
+  .subblock{ margin-top: 30px; max-width: var(--measure); }
+  .subblock h4{ font-family: var(--font-display); font-size: 16px; margin-bottom: 8px; }
+  .subblock{ margin-top: 30px; max-width: 85ch; }
+  .repo-links{ list-style: none; padding: 0; margin: 10px 0 0; font-size: 15px; }
+  .repo-links li{ margin-bottom: 6px; }
+  .repo-links code{ font-family: var(--font-mono); font-size: 13px; background: var(--accent-soft); padding: 1px 6px; border-radius: 3px; }
+
+  .result-figure{
+    margin-top: 4px; border: 1px dashed var(--line); background: var(--surface);
+    padding: 32px 20px; text-align: center; color: var(--ink-soft); font-size: 14px;
+  }
+
+  /* ---------- Further projects (compact tier) ---------- */
+  .compact-item{ padding: 22px 50px; border-top: 1px solid var(--line); }
+  .compact-item:first-child{ border-top: none; padding-top: 0; }
+
+
+  /* ---------- Background ---------- */
+  #background p{ max-width: var(--measure); }
+  #background p + p{ margin-top: 14px; }
+
+  .tool-grid{ display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 38px; margin-top: 38px; }
+  .tool-group h4{ font-family: var(--font-mono); font-size: 16px; font-weight: 500; color: var(--ink-soft); margin: 0 0 16px; }
+  .tool-group ul{
+  list-style: none; padding: 0; margin: 0;
+  display: flex; flex-wrap: wrap; gap: 16px;
+
+  }
+  .tool-group li{
+    font-family: var(--font-mono);
+    font-size: 12.5px;
+    color: var(--ink);
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 3px;
+    padding: 5px 10px;
+    line-height: 1.3;
+  }
+
+  /* ---------- Contact / footer ---------- */
+  footer{ padding: 52px 0 64px; }
+  footer h2{ font-size: 22px; margin-bottom: 12px; }
+  footer p{ color: var(--ink-soft); max-width: none; }
+  .contact-links{ display: flex; flex-wrap: wrap; gap: 20px; margin-top: 22px; font-family: var(--font-mono); font-size: 16.5px; }
+  .foot-note{ margin-top: 48px; padding-top: 16px; border-top: 1px solid var(--line); font-family: var(--font-mono); font-size: 12px; color: var(--ink-soft); }
+
+  .hero p.lede,
+.current-block p.overview,
+.current-block p.confidential,
+.case .overview,
+.gate .gate-purpose,
+.subblock,
+#background p,
+.compact-item p{
+  max-width: none;
+}
+</style>
+</head>
+<body>
+
+<header class="site">
+  <div class="nav">
+    <div class="name">Daragh Haughton<span>Space systems / onboard AI</span></div>
+    <button class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navList">Menu</button>
+    <ul id="navList">
+      <li><a href="#now">Now</a></li>
+      <li><a href="#work">Work</a></li>
+      <li><a href="#background">Background</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <!-- ============ HERO ============ -->
+  <section class="hero" style="border-top:none; padding-top:52px;">
+    <h1>Building systems that get intelligent payloads off the ground, and actionable data back down.</h1>
+    <p class="lede">
+      MSc Space Science &amp; Technology graduate (UCD), currently working on Earth observation 
+      and Maritime Domain Awareness at Ubotica Technologies. Keep reading to learn more about some of my past work, 
+      from an ML model built for autonomous attitude recognition on a high altitude balloon mission, to my time working on Prithvi,
+      IBM's flagship geospatial foundation model.
+
+      I am very keen for any potential job opportunities in or adjacent to the space sector in Ireland. 
+    </p>
+
+    <!-- Replace with a real photo: the near-space image from TupperSat is the obvious choice -->
+    <img class="hero-photo" src="Tuppersat_space_image.jpg" alt="Near-space photo captured during TupperSat's ascent">
+    <div class="hero-photo-caption">
+      <span>Image captured during team SkyNets TupperSat ascent, at roughly ~ 21km. Spot the plane in the bottom right corner!</span>
+          </div>
+
+    <div class="stat-row">
+  TCD Physics &amp; Astrophysics, 2.1 &nbsp;·&nbsp; UCD MSc Space Science &amp; Technology, 1.1
+  </div>
+  <div class="medal-badge">
+    <span class="medal-badge-label">McEnery Medal Recipient</span>
+    <span class="medal-badge-detail">2026 — awarded to the top-placing graduate, UCD MSc Space Science &amp; Technology</span>
+  </div>
+  </section>
+
+  <!-- ============ NOW (Ubotica) ============ -->
+  <section id="now" class="band">
+    <div class="section-head">
+      <h2>Now</h2>
+    </div>
+    <div class="current-block">
+      <h3>Ubotica Technologies</h3>
+      <dl class="manifest">
+        <div><dt>role</dt><dd>AIS-Matching</dd></div>
+        <div><dt>focus</dt><dd>Onboard AI · MDA · SAR · AIS</dd></div>
+        <div><dt>started</dt><dd>June, 2026</dd></div>
+        <div><dt>status</dt><dd>Ongoing → Dec 2026</dd></div>
+      </dl>
+      <p class="overview">
+        Working on AIS-Matching - the fusion of Automatic Identification System (AIS)
+        data with detected vessels in satellite imagery, to highlight dark (those which don't transmit their AIS)
+        and ghost (those which fake their AIS) vessels.
+
+        In this work, I am gaining experience with Google Cloud CLI and Cloud Buckets, QGIS, Spatio-Temporal Asset Catalogues, rasterio processing, 
+        Vertex AI, and complex algorithm development and testing.
+      </p>
+      <p class="confidential">
+        Given the proprietary and ongoing nature of the work, specifics stay off this page —
+        happy to talk about it directly.
+      </p>
+    </div>
+  </section>
+
+  <!-- ============ WORK ============ -->
+  <section id="work">
+    <div class="section-head">
+      <h2>Some featured work</h2>
+      <p>Three projects, in the most depth: a satellite payload I led through flight, a foundation-model internship with IBM, and my capstone research project at TCD.</p>
+    </div>
+
+    <!-- ---- Case 1: TupperSat ---- -->
+    <article class="case">
+      <h3 class="case-title">1. TupperSat</h3>
+      <p class="case-sub">A student-built edge-AI satellite payload, flown to near-space on a high-altitude balloon</p>
+
+      <dl class="manifest">
+        <div><dt>role</dt><dd>Team leader - Lead ML engineer - Camera, GPS and magnetometer technician</dd></div>
+        <div><dt>team</dt><dd>Team SkyNet · 5 students</dd></div>
+        <div><dt>duration</dt><dd>January - April, 2026</dd></div>
+        <div><dt>standard</dt><dd>ECSS - full development cycle</dd></div>
+        <div><dt>mission status</dt><dd>Flown &amp; recovered, operational for 
+                 full flight duration</dd></div>
+      </dl>
+
+      <p class="overview">
+        Led the team through design, build, and flight of a High Altitude Balloon payload. My role as lead ML engineer: develop <strong>ARNIE</strong> 
+        - Attitude Recognition Neural Intelligence Engine. This was an onboard image classification system trained and 
+        deployed to a Raspberry Pi via Tensor Flow Lite. I built the data augmentation and image manipulation pipeline used
+        to train it, alongside assisting with the mechanical and electrical design and development of the payload itself (this
+        included magnetometer calibration and Raspberry Pi camera setup). 
+      </p>
+
+      <h3 class="section-label">Flight Documentation</h3>
+      <div class="gates">
+        <div class="gate">
+          <div class="gate-num">01</div>
+          <div>
+            <h4>Preliminary Design Review</h4>
+            <p class="gate-purpose">Established the baseline mission design, structured the distribution of work packages, defined requirements</p>
+            <p class="gate-detail"><b>Owned:</b> The development of the key payload model, ARNIE, and the training pipeline</p>
+            <p class="gate-detail"><b>Key artifact:</b> Targeted keeping ARNIE lightweight (< 3 mb) to prevent inference failure on constrained
+            microcontroller. Also targeted +/- 10 degree accuracy in attitude recognition. </p>
+          </div>
+        </div>
+        <div class="gate">
+          <div class="gate-num">02</div>
+          <div>
+            <h4>Critical Design Review</h4>
+            <p class="gate-purpose">Locked in the final design of the SkyNet payload, ARNIE's architecture, and ARNIE-OS interfacing prior to development commencing.
+            </p>
+            <p class="gate-detail"><b>Owned:</b> Finalised ARNIE's model architecture, training pipeline, ARNIE-OS interfacing</p>
+            <p class="gate-detail"><b>Key artifact:</b> Interface control documents, test procedures, data pipeline, training pipeline</p>
+          </div>
+        </div>
+        <div class="gate">
+          <div class="gate-num">03</div>
+          <div>
+            <h4>Flight Acceptance Review</h4>
+            <p class="gate-purpose"> Established and documented the flight readiness of all SkyNet systems </p>
+            <p class="gate-detail"><b>Owned:</b> Software and documentation organisation and review </p>
+            <p class="gate-detail"><b>Key artifact:</b> FAR showed that all systems were mission-ready, namely ARNIE, on-board software, and the Rasp-Pi camera</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="subblock">
+        <h4>Build</h4>
+        <p>ARNIE is a custom CNN, built in TensorFlow using keras, and trained on Google Colab GPUs (specifically the T4 GPU). 
+        I built ARNIE's architecture (including a custom cosine loss function for angle wrap handling), the training pipeline,
+        the data augmentation work behind it, and the payload's flight
+        software from scratch. <br><br>
+        
+        ARNIE was trained on 10 m Sentinel-2 imagery, with realistic conditions for the time of year of the mission.
+        ARNIE's purpose was attitude recognition based on the orientation of high contrast geological features in imagery from 
+        the onboard camera. As such, the model was purposefully overfitted to regions in the area of operation (see the map below). The trained model
+        was quantised and converted to TF Lite for microcontroller inference.<br><br>
+      </p>
+
+
+        <div class="result-figure"><img class="small-img" src="SkyNet mission map.png" alt="The area covering all potential launch sites">
+        <div class="case-img-caption">
+        <span>Map of the area covering all four potential launch sites for the 2026 TupperSat mission. Lough Neagh and Lough Erne were treated as two 
+          primary targets, around which the Monte-Carlo cropping for training data was focused. The shorelines of these lakes provided the necessary
+          distinct feature for training the model to orient itself.
+        </span>
+          </div></div>
+
+
+        <ul class="repo-links">
+          <li><code>arnie</code><a href="#">REPO COMING SOON!</a></li>
+        </ul>
+      </div>
+
+      <div class="subblock">
+        <h4>Results</h4>
+        <p>Team SkyNet had a very successful flight. For the total ~2 hour flight, SkyNet was the only team to remain in constant operation and contact with ground stations. ARNIE
+          inference was successful in 243/243 attempts on the compute-constrained microcomputer, and the TupperSat was successfully recovered post-flight. <br><br>
+          
+          The only facet that didn't go to
+          plan was ARNIE's attitude recognition. Due to haze and significant swinging and rotational motion of the payload during flight, the images provided to the CNN
+          differed massively to what it was trained on, so it collapsed to guessing the most commonly encountered angles in the training data. It was suspected this would happen
+          during development, but due to time constraints between CDR and FAR, there was little that could be done to correct.<br><br>
+
+          That being said, ground testing validated the model could learn and perform attitude recognition, and flight testing validated that the end-to-end system could work as intended, leaving
+          only this data discrepancy as the gap to be bridged. If I were to do this project again, with a larger budget, I would run data collection flights for more informed data augmentation.
+        </p>
+
+        <div class="result-figure"><img class="case-img" src="ARNIE_LAB_RES.png" alt="ARNIE post training testing">
+        <div class="case-img-caption">
+        <span>ARNIE's performance following 50 epochs of training. As can be seen, the model was adept at predicting the heading
+          of the payload based on the high contrast geological features visible to it (In this case, Lough Erne in Northern Ireland).
+        </span>
+          </div></div>
+
+        <p style="margin-top:1px;"> </p>
+        
+        <div class="result-figure"><img class="case-img" src="SKYNETPLOT.png" alt="Telemetry data (Altitude)">
+        <div class="case-img-caption">
+        <span>Telemetry data (Altitude, velocity and acceleration) over the course of the ~2 hr flight</span>
+          </div></div>
+
+        <p style="margin-top:1px;">SkyNet remained operational and communicating with ground stations for the duration of flight, as seen in the telemetry plots.</p>
+      </div>
+
+      <div class="subblock">
+        <h4>Retrospective</h4>
+        <p>Technically, this project taught me the importance of proper data augmentation. While the pipeline I built was extensive, the depth of the augmentation
+          was vastly insufficient for capturing actual flight conditions for making ARNIE work (which lead to it performing poorly at in-flight attitude classification, 
+          despite its strong performance in lab testing).<br><br>
+
+          From a team perspective, this project taught me about the importance of skill diversity. My team was diverse and adept at both hardware and software design. Between 
+          the body of the TupperSat, the on-board software, ARNIE, and the sensors, without a broad and varying skill set between us, the mission never would've got off the ground.<br><br>
+          I learned an immeasurable amount from working with my team members, and developed close friendships with them.
+          I also learned a lot about conflict resolution, coordinating a technical team while working under stressful conditions, mission planning and accountability tracking.
+        </p>
+      </div>
+    </article>
+
+    <!-- ---- Case 2: IBM / Prithvi ---- -->
+    <article class="case">
+      <h3 class="case-title">2. IBM Internship - Prithvi Geospatial Foundation Model</h3>
+      <p class="case-sub">Internship contributing to IBM and NASA's open-source Earth observation foundation model</p>
+
+      <dl class="manifest">
+        <div><dt>role</dt><dd>Remote Intern</dd></div>
+        <div><dt>team</dt><dd>IBM UK/Ire</dd></div>
+        <div><dt>duration</dt><dd>July-Oct, 2024</dd></div>
+        <div><dt>status</dt><dd>Complete</dd></div>
+      </dl>
+
+      <p class="overview">
+        I got to contribute to and learn an immense amount about Prithvi, IBM and NASA's open-source geospatial foundation model, working on
+        hyperparameter tuning and learning about transformer training, and on image masking for the model's
+        self-supervised pretraining, specifically for wildfire burn-scars and flood damage.
+        I also worked on testing and utilising the open source jupyter notebooks. I worked autonomously and remotely with a team in 
+        the UK.
+
+      </p>
+
+      <div class="subblock">
+        <h4>Outputs</h4>
+        <ul class="repo-links">
+          <li><code>Some of my Prithvi work:</code> <a href="https://github.com/dhaughto1776/MY-BURNSCAR-GFM">MY-BURNSCAR-GFM</a></li>
+        </ul>
+      </div>
+
+      <div class="result-figure"><img class="case-img" src="GFM3.png" alt="Inference results of prithvi, finetuned for wildfire burnscar identifcation in Harmonised Landsat imagery.">
+        <div class="case-img-caption">
+        <span>Inference results of Prithvi, finetuned for wildfire burnscar identifcation in Harmonised Landsat imagery.</span>
+          </div>
+
+        <p style="margin-top:1px;">Prithvi's performance for wildfire burnscar identifcation can be seen. Of particular note is how it can identify two separate patches of burnscar, highlighting the ability of transformer architecture to parse the image all at once, and understand how different parts of the region are connected.</p>
+      </div>
+
+      <div class="subblock">
+        <h4>Reflection</h4>
+        <p>This project had a steep learning curve for an astrophysics undergrad, but introduced me to what I would now
+          call an equivalent passion to space; machine learning for Earth Observation. I also learned an immense amount about the 
+          fundamentals of many ML, computer vision and Neural Intelligence concepts.<br><br>
+          Communication was definitely something that I needed to work on. I found it difficult to ask for help and assert myself. 
+          In my capstone project and since, this is something I have improved upon immensely. I would now consider 
+          communication a strength of mine.</p>
+      </div>
+    </article>
+
+    <!-- ---- Case 3: TCD Capstone ---- -->
+    <article class="case">
+      <h3 class="case-title">3. Capstone Research — Type Ia Supernova Progenitor Systems</h3>
+
+      <dl class="manifest">
+        <div><dt>role</dt><dd>Astrophysics research</dd></div>
+        <div><dt>dataset</dt><dd>ZTF, ATLAS, NIST</dd></div>
+        <div><dt>duration</dt><dd>Sept–Dec, 2024</dd></div>
+        <div><dt>supervisor</dt><dd>Dr. Kate Maguire, TCD </dd></div>
+      </dl>
+
+      <p class="overview">
+        Investigated progenitor systems of Type Ia supernovae using Zwicky Transient Facility data,
+        applying Gaussian process regression to light curve analysis alongside spectral analysis.
+        Specifically, I investigated 03FG and 02ES subtypes. Both differ in terms of size, but exhibit a characteristic 
+        'bump' in flux at the start of their lightcurve. 
+      </p>
+
+      <div class="subblock">
+        <h4>Method</h4>
+        <p>GP Regression was applied to address gaps in SNe lightcurve data, and to assess the presence of the characteristic flux bump in ZTF data. Piscola was applied
+          to ATLAS data to calculate the change in brightness post explosion. Spectral analysis was performed to investigate the pseudo equivalent width
+          of particular carbon features. The trends for both subtypes were compared, to assess the similarity between them.
+          Tool suite included python, george and piscola for lightcurve modelling.</p>
+      </div>
+
+      <div class="result-figure"><img class="case-img" src="CSTONE.png" alt="The lightcurve showing the lead up and explosion of ZTF19abkeuto.">
+        <div class="case-img-caption">
+        <span>The lightcurve showing the lead up and explosion of ZTF19abkeuto. </span>
+          </div></div>
+
+        <p style="margin-top:1px;">The characteristic flux bump of interest can be seen occuring 20 days prior to peak brightness. It is believed that this bump is caused by interaction of the ejected SNe material with an outer disk of ionised carbon.</p>
+      </div>
+
+      <div class="subblock">
+        <h4>Findings</h4>
+        <p>Showed a correlation between the supernovae, but data sparsity for both subtypes meant that there was insufficient evidence for the result to be
+          considered significant. Provided weak support for existing and future research. 
+        </p>
+      </div>
+
+      <div class="subblock">
+        <h4>Outputs</h4>
+        <ul class="repo-links">
+          <li><code>My Capstone notebook:</code> <a href="https://github.com/dhaughto1776/Capstone-Code">Capstone-Code</a></li>
+          <li><a href="https://github.com/dhaughto1776/Capstone-Code/blob/main/docs/CAPSTONE%20PROJECT%20DARAGH%20HAUGHTON.pdf">Final Report (PDF)</a></li>
+                    <li><a href="https://github.com/dhaughto1776/Capstone-Code/blob/main/docs/Haughton_Daragh_pst.pdf">Poster (PDF)</a></li>
+        </ul>
+      </div>
+
+      <div class="subblock">
+        <h4>Reflection</h4>
+        <p>This project showed me the vitality of having enough data. It was immensely enjoyable to perform independent research. Having just
+          finished my IBM internship when starting this research presented the opportunity to immediately apply the lessons I'd learned, namely on communication between my supervisor and me.
+          Furthermore, getting to actually work on astrophysics research was eye opening to the realities of academia (i.e., limited funding and PhD positions), which spurred my transition
+          to a more industry focused career path.
+        </p>
+      </div>
+    </article>
+  </section>
+
+  <!-- ============ FURTHER PROJECTS (compact) ============ -->
+  <section class="band">
+    <div class="section-head">
+      <h2>Further coursework projects</h2>
+    </div>
+
+    <div class="compact-item">
+      <h4>Applications of Space Science</h4>
+      <p>Remote sensing work covering NDVI and NDWI vegetation/water indices, burn scar detection, and
+      water turbidity modelling. Also completed a GPS geolocation assignment. Got experience utilising JWST and HST, 
+      and learned about the fundamentals of space telescope design.</p>
+    </div>
+    <div class="compact-item">
+      <h4>Spacecraft Operations</h4>
+      <p>Telemetry reading, signal encoding and decoding, and mission control system (MCS) software,
+        plus spacecraft assembly and radio communication fundamentals. Culminated in a six hour
+         mission test, simulating operation, monitoring and maintenance of EIRSAT-1, Ireland's first
+         satellite and its GMOD gamma ray instrument.
+      </p>
+    </div>
+    <div class="compact-item">
+      <h4>Space Detector Lab</h4>
+      <p>Earth observation image manipulation to track temporal land change (the 2022 Hunga Tonga eruption), alongside radiation
+      detector calibration and Hubble Space Telescope filter calibration and usage.</p>
+    </div>
+    <div class="compact-item">
+      <h4>The Space Environment</h4>
+      <p>Orbital debris re-entry simulation using ESA's DRAMA tool, and Hohmann transfer simulations
+      using NASA's GMAT — module coursework on space debris, radiation environments, orbital mechanics
+       and rocket science.</p>
+    </div>
+  </section>
+
+  <!-- ============ BACKGROUND ============ -->
+  <section id="background">
+    <div class="section-head">
+      <h2>Background</h2>
+    </div>
+    <p>
+      BA in Physics &amp; Astrophysics (Trinity College Dublin, 2.1), covering core physics including
+      quantum mechanics, electrodynamics, nuclear and semiconductor physics, optics and lasers,
+      cosmology, and special relativity, alongside computational and mathematical methods. MSc in
+      Space Science &amp; Technology (UCD, 1.1), with additional coursework in high-energy
+      astrophysics mission design, theoretical astrophysics, and applied machine learning — including
+      NLP work with BERT, Word2Vec, and Doc2Vec, and a churn-prediction project in a data programming
+      module.
+    </p>
+
+  <div class="tool-group">
+    <h4>flight &amp; embedded</h4>
+    <ul>
+      <li>Payload design &amp; build</li>
+      <li>TFLite</li>
+      <li>Raspberry Pi</li>
+      <li>Telemetry</li>
+      <li>RF comms</li>
+      <li>MCS</li>
+      <li>Rasp-Pi camera</li>
+      <li>Standard spacecraft sensor suite</li>
+      <li>Magnetometers</li>
+      <li>GPS jailbreaking</li>
+    </ul>
+  </div>
+  <div class="tool-group">
+    <h4>data &amp; AI</h4>
+    <ul>
+      <li>Onboard / edge CV &amp; ML</li>
+      <li>Transformer &amp; CNN training</li>
+      <li>Remote sensing / EO analysis</li>
+      <li>Semantic segmentation</li>
+      <li>Instance segmentation</li>
+      <li>TensorFlow (Keras)</li>
+      <li>PyTorch</li>
+      <li>OpenCV</li>
+      <li>rasterio</li>
+      <li>CNNs</li>
+      <li>ViTs</li>
+      <li>NLP</li>
+      <li>Vertex AI</li>
+      <li>Google Cloud</li>
+    </ul>
+  </div>
+  <div class="tool-group">
+    <h4>processing &amp; standards</h4>
+    <ul>
+      <li>ECSS mission lifecycle (PDR / CDR / FAR)</li>
+      <li>ESA DRAMA</li>
+      <li>ESA SPENVIS</li>
+      <li>NASA GMAT</li>
+      <li>Gaussian process regression</li>
+      <li>Spectral analysis</li>
+      <li>ESA ITT proposal writing</li>
+      <li>GitHub</li>
+      <li>Git</li>
+      <li>Windows</li>
+      <li>Linux</li>
+      <li>Ubuntu</li>
+    </ul>
+  </div>
+  </div>
+  </section>
+
+  <!-- ============ CONTACT ============ -->
+  <footer id="contact">
+    <h2>Get in touch</h2>
+    <p>Open and very eager for full-time roles in Ireland or abroad (if remote), happy to talk through any of the above directly. You may notice I haven't linked my CV. 
+      If you have a role you think I would fit, get in touch and I'll send over a tailored CV!</p>
+    <div class="contact-links">
+      <a href="mailto:daraghhaughton@gmail.com">daraghhaughton@gmail.com</a>
+      <a href="https://www.linkedin.com/in/daragh-haughton" target="_blank" rel="noopener">LinkedIn</a>
+      <a href="https://github.com/dhaughto1776" target="_blank" rel="noopener">GitHub</a>
+    </div>
+    <div class="foot-note">Daragh Haughton — Dublin, Ireland</div>
+  </footer>
+
+</main>
+
+<script>
+  const navToggle = document.getElementById('navToggle');
+  const navList = document.getElementById('navList');
+  navToggle.addEventListener('click', () => {
+    const isOpen = navList.classList.toggle('open');
+    navToggle.setAttribute('aria-expanded', String(isOpen));
+  });
+  navList.querySelectorAll('a').forEach(link => {
+    link.addEventListener('click', () => {
+      navList.classList.remove('open');
+      navToggle.setAttribute('aria-expanded', 'false');
+    });
+  });
+</script>
+
+</body>
+</html>
